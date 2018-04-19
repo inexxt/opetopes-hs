@@ -1,3 +1,3 @@
 # opetopes-hs
 
-Port of github.com/inexxt/opetopes written in Haskell
+Port of [original opetopes](http://github.com/inexxt/opetopes) written in Haskell
