@@ -36,15 +36,11 @@ instance Show (Opetope n) where
 instance Eq (Opetope dim) where
     (OPoint x) == (OPoint y) = x == y
     (OArrow x) == (OArrow y) = x == y
-    (OFace x) == (OFace y) = x == y
+    (OFace x) == (OFace y) = show x == show y
 
+-- ugly, but i don't really need Ord, it's only for using Data.Set 
 instance Ord (Opetope dim) where
-    x <= y = (name x < name y) 
-        where 
-            name x = case x of
-                OPoint t -> nameP t
-                OArrow t -> nameA t
-                OFace t -> nameF t
+    x <= y = show x <= show y
 
 a = OPoint (Point "a")
 b = OPoint (Point "b")
