@@ -21,6 +21,10 @@ description:         Please see the README on Github at <https://github.com/gith
 
 dependencies:
 - base >= 4.7 && < 5
+- multiset >= 0.3.4
+- HUnit >= 1.2.0.3
+- tasty
+- tasty-hunit >= 0.9.2
 
 library:
   source-dirs: src
@@ -38,7 +42,7 @@ executables:
 
 tests:
   opetopes-hs-test:
-    main:                Spec.hs
+    main:                Main.hs
     source-dirs:         test
     ghc-options:
     - -threaded
