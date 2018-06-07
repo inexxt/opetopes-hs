@@ -25,7 +25,7 @@ dependencies:
 - HUnit >= 1.2.0.3
 - tasty
 - tasty-hunit >= 0.9.2
-
+- Unique >= 0.4.7
 library:
   source-dirs: src
 
