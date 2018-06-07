@@ -3,25 +3,41 @@
 
 module Face where 
 
+import Nattype
 import qualified Opetope as O
 import Subtype
 
+em = O.OpetopeE -- how to import that as this name?
 
-data ProdFace (dim :: O.Nat) where 
-    Point :: String -> O.Opetope O.Z-> O.Opetope O.Z-> ProdFace O.Z
-    Arrow :: String -> O.Opetope O.Z-> O.Opetope O.Z-> ProdFace O.Z-> ProdFace O.Z-> ProdFace (O.S O.Z)
-    Face :: String -> O.Opetope n1 -> O.Opetope n2 -> [ProdFace (O.S m)] -> ProdFace (O.S m) -> ProdFace (O.S (O.S m))
+
+
+data ProdFace (dim :: Nat) where
+    Point :: O.Opetope Z-> O.Opetope Z-> ProdFace Z
+    -- TODO there should be refinment types - it has to have p1, p2 of dim > 1 
+    Arrow :: String -> O.OpetopeE -> O.OpetopeE -> ProdFace Z -> ProdFace Z-> ProdFace (S Z)  
+    Face :: String -> O.OpetopeE -> O.OpetopeE -> [ProdFace (S m)] -> ProdFace (S m) -> ProdFace (S (S m))
+
+p1 :: ProdFace n -> O.OpetopeE
+p1 (Point x _) = em x
+p1 (Arrow _ x _ _ _) = x
+p1 (Face _ x _ _ _) = x
+
+p2 :: ProdFace n -> O.OpetopeE
+p2 (Point _ y) = em y
+p2 (Arrow _ _ y _ _) = y
+p2 (Face _ _ y _ _) = y
+
 
 deriving instance Eq (ProdFace dim)
-deriving instance Show (ProdFace dim)
+-- deriving instance Show (ProdFace dim) -- TODO
 
 instance Subtype (ProdFace dim) where 
     type SuperType (ProdFace dim) = O.Opetope dim
-    embedImmediate (Point s _ _) = O.Point s
+    embedImmediate (Point _ _) = O.Point ""
     embedImmediate (Face s _ _ d c) = O.Face s (map embedImmediate d) (embedImmediate c)
 
-match :: O.Opetope n1 -> O.Opetope n2 -> [ProdFace (O.S m)] -> ProdFace (O.S m) -> Bool
-match _ _ d c = O.match (map embedImmediate d) (embedImmediate c)
+match :: O.OpetopeE -> O.Opetope n2 -> [ProdFace (S m)] -> ProdFace (S m) -> Bool
+match _ _ d c = O.match (map embedImmediate d) (embedImmediate c) -- TODO
 
 
 --     @staticmethod
@@ -54,38 +70,18 @@ match _ _ d c = O.match (map embedImmediate d) (embedImmediate c)
 
 --         return True
 
---     @staticmethod
---     def from_point_and_point(p1: Opetope, p2: Opetope) -> 'Face':
---         assert (p1.level, p2.level) == (0, 0)
---         return Face(p1, p2)
 
---     @staticmethod
---     def from_arrow_and_point(p1: Opetope, p2: Opetope) -> 'Face':
---         assert (p1.level, p2.level) == (1, 0)
---         return Face(p1, p2, ins=[Face.from_point_and_point(p1.ins[0], p2)],
---                     out=Face.from_point_and_point(p1.out, p2))
+from_arrow_and_point :: O.Opetope (S Z) -> O.Opetope Z -> ProdFace (S Z)
+from_arrow_and_point arr pt = let (O.Arrow _ d c) = arr in
+    Arrow "" (em arr) (em pt) (Point d pt) (Point c pt)
 
---     @staticmethod
---     def from_point_and_arrow(p1: Opetope, p2: Opetope) -> 'Face':
---         assert (p1.level, p2.level) == (0, 1)
---         # we can't just use from_arrow_and_point, because the order p1, p2 is important
---         return Face(p1, p2, ins=[Face.from_point_and_point(p1, p2.ins[0])],
---                     out=Face.from_point_and_point(p1, p2.out))
+-- we can't just use from_arrow_and_point, because the order p1, p2 is important
+from_point_and_arrow ::  O.Opetope Z -> O.Opetope (S Z) -> ProdFace (S Z)
+from_point_and_arrow pt arr = let (O.Arrow _ d c) = arr in
+    Arrow "" (em pt) (em arr) (Point pt d) (Point pt c)
 
---     @staticmethod
---     def from_arrow_and_arrow(p1: Opetope, p2: Opetope) -> 'Face':
---         assert (p1.level, p2.level) == (1, 1)
---         return Face(p1, p2, ins=[Face.from_point_and_point(p1.ins[0], p2.ins[0])],
---                     out=Face.from_point_and_point(p1.out, p2.out))
-
---     def __eq__(self, other):
---         return hash(self) == hash(other)
-
---     def __hash__(self):
---         return hash(self._str_full)
-
---     def __str__(self):
---         return self._str
-
---     def __repr__(self):
---         return self._str
+from_arrow_and_arrow :: O.Opetope (S Z) -> O.Opetope (S Z) -> ProdFace (S Z)
+from_arrow_and_arrow arr1 arr2 = 
+    let (O.Arrow _ d1 c1) = arr1
+        (O.Arrow _ d2 c2) = arr2 in 
+            Arrow "" (em arr1) (em arr2) (Point d1 d2) (Point c1 c2)

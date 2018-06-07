@@ -7,9 +7,7 @@ import Text.Printf (printf)
 import qualified Data.MultiSet as S
 import Data.List.Unique (unique)
 
-
-data Nat = Z | S Nat deriving (Eq, Ord, Show)
-
+import Nattype
 
 data Opetope (dim :: Nat) where
     Point :: String -> Opetope Z
