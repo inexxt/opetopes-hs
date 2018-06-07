@@ -1,4 +1,4 @@
-{-# LANGUAGE TypeFamilies, GADTs, KindSignatures, StandaloneDeriving, DataKinds, FlexibleInstances, LambdaCase, ExistentialQuantification #-}
+{-# LANGUAGE TypeFamilies, GADTs, KindSignatures, StandaloneDeriving, DataKinds, FlexibleInstances, LambdaCase, ExistentialQuantification, DeriveDataTypeable #-}
 
  
 module Opetope where
@@ -6,6 +6,7 @@ module Opetope where
 import Text.Printf (printf)
 import qualified Data.MultiSet as S
 import Data.List.Unique (unique)
+import Data.Data
 
 import Nattype
 
@@ -38,9 +39,9 @@ match :: [Opetope (S dim)] -> Opetope (S dim) -> Bool
 match ins out = not $ null $ (all_dom `S.union` out_cod) `S.difference` (all_cod `S.union` out_cod)
     where
         all_dom = (S.fromList (concat $ map dom ins))
-        out_dom =  (dom out) `S.insert` S.empty
+        out_dom =  S.singleton (dom out)
         all_cod = (S.fromList (map cod ins))
-        out_cod =  (cod out) `S.insert` S.empty
+        out_cod =  S.singleton (cod out)
 
 
 is_unary :: Opetope (S dim) -> Bool
@@ -50,14 +51,11 @@ data OpetopeE = forall n. OpetopeE (Opetope n)
 
 
 instance Eq OpetopeE where
-    (OpetopeE (Point a)) == (OpetopeE (Point b)) = a == b
-    (OpetopeE (Arrow a c d)) == (OpetopeE (Arrow b c' d')) = a == b -- Dlaczego to nie działa? Przecież powinno zejść rekurencyjnie ... && c == c' && d == d'
+    (OpetopeE (Point a1)) == (OpetopeE (Point a2)) = a1 == a2
+    (OpetopeE (Arrow a1 c1 d1)) == (OpetopeE (Arrow a2 c2 d2)) = a1 == a2 && c1 == c2 && d1 == d2 -- Dlaczego to nie działa? Przecież powinno zejść rekurencyjnie ... && c == c' && d == d'
     (OpetopeE (Face a c d)) == (OpetopeE (Face b c' d')) = a == b -- j.w. && c == c' && d == d'
-
-    (OpetopeE (Point _)) == (OpetopeE (Arrow _ _ _)) = False
-    (OpetopeE (Point _)) == (OpetopeE (Face _ _ _)) = False
-    (OpetopeE (Arrow _ _ _)) == (OpetopeE (Face _ _ _)) = False
-
+    
+    _ == _ = False
 
 instance Ord OpetopeE where
     (OpetopeE (Point a)) <= (OpetopeE (Point b)) = a <= b
@@ -82,7 +80,7 @@ subouts op = case op of
 
 
 is_valid_morphism :: Opetope n1 -> Opetope n2 -> Bool
-is_valid_morphism op1 op2 = True
+is_valid_morphism op1 op2 = undefined
 
 --     @staticmethod
 --     def is_valid_morphism(op1: 'Opetope', op2: 'Opetope') -> bool:

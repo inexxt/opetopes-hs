@@ -9,13 +9,12 @@ import Subtype
 
 em = O.OpetopeE -- how to import that as this name?
 
-
-
 data ProdFace (dim :: Nat) where
     Point :: O.Opetope Z-> O.Opetope Z-> ProdFace Z
     -- TODO there should be refinment types - it has to have p1, p2 of dim > 1 
     Arrow :: String -> O.OpetopeE -> O.OpetopeE -> ProdFace Z -> ProdFace Z-> ProdFace (S Z)  
     Face :: String -> O.OpetopeE -> O.OpetopeE -> [ProdFace (S m)] -> ProdFace (S m) -> ProdFace (S (S m))
+
 
 p1 :: ProdFace n -> O.OpetopeE
 p1 (Point x _) = em x
@@ -27,8 +26,24 @@ p2 (Point _ y) = em y
 p2 (Arrow _ _ y _ _) = y
 p2 (Face _ _ y _ _) = y
 
+-- TODO change that, it should be a very simple extension of O.dom and O.cod
+dom :: ProdFace (S n) -> [ProdFace n]
+dom (Arrow _ _ _ d _) = [d]
+dom (Face _ _ _ d _) = d
+
+cod :: ProdFace (S n) -> ProdFace n
+cod (Arrow _ _ _ _ c) = c
+cod (Face _ _ _ _ c) = c
 
 deriving instance Eq (ProdFace dim)
+-- deriving instance Ord (ProdFace dim) -- for some reason this doesn't work TODO
+
+instance Ord (ProdFace dim) where
+    (Point x1 y1) <= (Point x2 y2) = (x1, y1) <= (x2, y2)
+    (Arrow a1 x1 y1 c1 d1) <= (Arrow a2 x2 y2 c2 d2) = (a1, x1, y1, c1, d1) <= (a2, x2, y2, c2, d2)
+    (Face a1 x1 y1 c1 d1) <= (Face a2 x2 y2 c2 d2) = (a1, x1, y1, c1, d1) <= (a2, x2, y2, c2, d2)
+
+
 -- deriving instance Show (ProdFace dim) -- TODO
 
 instance Subtype (ProdFace dim) where 
@@ -36,8 +51,27 @@ instance Subtype (ProdFace dim) where
     embedImmediate (Point _ _) = O.Point ""
     embedImmediate (Face s _ _ d c) = O.Face s (map embedImmediate d) (embedImmediate c)
 
-match :: O.OpetopeE -> O.Opetope n2 -> [ProdFace (S m)] -> ProdFace (S m) -> Bool
-match _ _ d c = O.match (map embedImmediate d) (embedImmediate c) -- TODO
+match :: ProdFace (S (S n)) -> Bool
+match (Face _ _ _ d c) = O.match (map embedImmediate d) (embedImmediate c) -- TODO
+
+
+data FaceE = forall n. FaceE (ProdFace n)
+
+instance Eq FaceE where
+    (FaceE (Point x1 y1)) == (FaceE (Point x2 y2)) = x1 == x2 && y1 == y2
+    (FaceE (Arrow a1 x1 y1 _ _)) == (FaceE (Arrow a2 x2 y2 _ _)) = a1 == a2 && x1 == x2 && y1 == y2 -- Dlaczego to nie działa? Przecież powinno zejść rekurencyjnie ... && c == c' && d == d'
+    (FaceE (Face a1 x1 y1 _ _)) == (FaceE (Face a2 x2 y2 _ _)) = a1 == a2 && x1 == x2 && y1 == y2 -- j.w. && c == c' && d == d'
+
+    _ == _ = False
+
+-- instance Ord FaceE where
+--     (FaceE (Point a)) <= (FaceE (Point b)) = a <= b
+--     (FaceE (Arrow a c d)) <= (FaceE (Arrow b c' d')) = a <= b -- j.w. (a, c, d) <= (b, c', d')
+--     (FaceE (Face a c d)) <= (FaceE (Face b c' d')) = a <= b -- j.w. (a, c, d) <= (b, c', d')
+
+--     (FaceE (Point _)) <= (FaceE (Arrow _ _ _)) = True
+--     (FaceE (Point _)) <= (FaceE (Face _ _ _)) = True
+--     (FaceE (Arrow _ _ _)) <= (FaceE (Face _ _ _)) = True
 
 
 --     @staticmethod
