@@ -1,8 +1,0 @@
-Configuring tasty-hunit-0.10.0.1...
-Preprocessing library for tasty-hunit-0.10.0.1..
-Building library for tasty-hunit-0.10.0.1..
-[1 of 3] Compiling Test.Tasty.HUnit.Orig ( Test/Tasty/HUnit/Orig.hs, .stack-work/dist/x86_64-linux/Cabal-2.0.1.0/build/Test/Tasty/HUnit/Orig.o )
-[2 of 3] Compiling Test.Tasty.HUnit.Steps ( Test/Tasty/HUnit/Steps.hs, .stack-work/dist/x86_64-linux/Cabal-2.0.1.0/build/Test/Tasty/HUnit/Steps.o )
-[3 of 3] Compiling Test.Tasty.HUnit ( Test/Tasty/HUnit.hs, .stack-work/dist/x86_64-linux/Cabal-2.0.1.0/build/Test/Tasty/HUnit.o )
-Installing library in /home/jack/opetopes-hs/.stack-work/install/x86_64-linux/lts-11.5/8.2.2/lib/x86_64-linux-ghc-8.2.2/tasty-hunit-0.10.0.1-ABaWro6kG197N6nnKMeN1E
-Registering library for tasty-hunit-0.10.0.1..

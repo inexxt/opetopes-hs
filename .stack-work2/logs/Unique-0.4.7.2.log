@@ -1,8 +1,0 @@
-Configuring Unique-0.4.7.2...
-Preprocessing library for Unique-0.4.7.2..
-Building library for Unique-0.4.7.2..
-[1 of 3] Compiling Data.List.Unique ( Data/List/Unique.hs, .stack-work/dist/x86_64-linux/Cabal-2.0.1.0/build/Data/List/Unique.o )
-[2 of 3] Compiling Data.List.UniqueStrict ( Data/List/UniqueStrict.hs, .stack-work/dist/x86_64-linux/Cabal-2.0.1.0/build/Data/List/UniqueStrict.o )
-[3 of 3] Compiling Data.List.UniqueUnsorted ( Data/List/UniqueUnsorted.hs, .stack-work/dist/x86_64-linux/Cabal-2.0.1.0/build/Data/List/UniqueUnsorted.o )
-Installing library in /home/jack/opetopes-hs/.stack-work/install/x86_64-linux/lts-11.5/8.2.2/lib/x86_64-linux-ghc-8.2.2/Unique-0.4.7.2-JHWjlkNLVcbC3m4Q2aVVp2
-Registering library for Unique-0.4.7.2..
