@@ -5,23 +5,24 @@ module Face where
 
 import Nattype
 import qualified Opetope as O
+import qualified OpetopeUtils as U
 import Subtype
 
-em = O.OpetopeE -- how to import that as this name?
+em = U.OE -- how to import that as this name?
 
 data ProdFace (dim :: Nat) where
     Point :: O.Opetope Z-> O.Opetope Z-> ProdFace Z
     -- TODO there should be refinment types - it has to have p1, p2 of dim > 1 
-    Arrow :: String -> O.OpetopeE -> O.OpetopeE -> ProdFace Z -> ProdFace Z-> ProdFace (S Z)  
-    Face :: String -> O.OpetopeE -> O.OpetopeE -> [ProdFace (S m)] -> ProdFace (S m) -> ProdFace (S (S m))
+    Arrow :: String -> U.OpetopeE -> U.OpetopeE -> ProdFace Z -> ProdFace Z-> ProdFace (S Z)  
+    Face :: String -> U.OpetopeE -> U.OpetopeE -> [ProdFace (S m)] -> ProdFace (S m) -> ProdFace (S (S m))
 
 
-p1 :: ProdFace n -> O.OpetopeE
+p1 :: ProdFace n -> U.OpetopeE
 p1 (Point x _) = em x
 p1 (Arrow _ x _ _ _) = x
 p1 (Face _ x _ _ _) = x
 
-p2 :: ProdFace n -> O.OpetopeE
+p2 :: ProdFace n -> U.OpetopeE
 p2 (Point _ y) = em y
 p2 (Arrow _ _ y _ _) = y
 p2 (Face _ _ y _ _) = y
@@ -35,9 +36,10 @@ cod :: ProdFace (S n) -> ProdFace n
 cod (Arrow _ _ _ _ c) = c
 cod (Face _ _ _ _ c) = c
 
-deriving instance Eq (ProdFace dim)
--- deriving instance Ord (ProdFace dim) -- for some reason this doesn't work TODO
 
+deriving instance Eq (ProdFace dim)
+
+-- deriving instance Ord (ProdFace dim) -- for some reason this doesn't work TODO
 instance Ord (ProdFace dim) where
     (Point x1 y1) <= (Point x2 y2) = (x1, y1) <= (x2, y2)
     (Arrow a1 x1 y1 c1 d1) <= (Arrow a2 x2 y2 c2 d2) = (a1, x1, y1, c1, d1) <= (a2, x2, y2, c2, d2)
@@ -50,6 +52,9 @@ instance Subtype (ProdFace dim) where
     type SuperType (ProdFace dim) = O.Opetope dim
     embedImmediate (Point _ _) = O.Point ""
     embedImmediate (Face s _ _ d c) = O.Face s (map embedImmediate d) (embedImmediate c)
+
+dim :: ProdFace n -> SNat n
+dim f = U.dim (embedImmediate f)
 
 match :: ProdFace (S (S n)) -> Bool
 match (Face _ _ _ d c) = O.match (map embedImmediate d) (embedImmediate c) -- TODO

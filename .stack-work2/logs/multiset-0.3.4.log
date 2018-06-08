@@ -1,0 +1,23 @@
+Configuring multiset-0.3.4...
+Preprocessing library for multiset-0.3.4..
+Building library for multiset-0.3.4..
+[1 of 2] Compiling Data.MultiSet    ( Data/MultiSet.hs, .stack-work/dist/x86_64-linux/Cabal-2.0.1.0/build/Data/MultiSet.o )
+
+[;1mData/MultiSet.hs:765:26: [;1m[35mwarning:[0m[0m[;1m [[;1m[35m-Wdeprecations[0m[0m[;1m][0m[0m[;1m
+    In the use of ‘showTreeWith’
+    (imported from Data.Map.Strict, but defined in containers-0.5.11.0:Data.Map.Internal.DeprecatedShowTree):
+    Deprecated: "'showTreeWith' is now in "Data.Map.Internal.Debug""[0m[0m
+[;1m[34m    |[0m[0m
+[;1m[34m765 |[0m[0m showTreeWith hang wide = [;1m[35mMap.showTreeWith[0m[0m s hang wide . unMS
+[;1m[34m    |[0m[0m[;1m[35m                          ^^^^^^^^^^^^^^^^[0m[0m
+[0m[0m[0m[2 of 2] Compiling Data.IntMultiSet ( Data/IntMultiSet.hs, .stack-work/dist/x86_64-linux/Cabal-2.0.1.0/build/Data/IntMultiSet.o )
+
+[;1mData/IntMultiSet.hs:774:26: [;1m[35mwarning:[0m[0m[;1m [[;1m[35m-Wdeprecations[0m[0m[;1m][0m[0m[;1m
+    In the use of ‘showTreeWith’
+    (imported from Data.IntMap.Strict, but defined in containers-0.5.11.0:Data.IntMap.Internal.DeprecatedDebug):
+    Deprecated: "These debugging functions will be removed from this module. They are available from Data.IntMap.Internal.Debug."[0m[0m
+[;1m[34m    |[0m[0m
+[;1m[34m774 |[0m[0m showTreeWith hang wide = [;1m[35mMap.showTreeWith[0m[0m hang wide . unMS
+[;1m[34m    |[0m[0m[;1m[35m                          ^^^^^^^^^^^^^^^^[0m[0m
+[0m[0m[0mInstalling library in /home/jack/opetopes-hs/.stack-work/install/x86_64-linux/lts-11.5/8.2.2/lib/x86_64-linux-ghc-8.2.2/multiset-0.3.4-8AlI7mDearMFatZOMmGqIa
+Registering library for multiset-0.3.4..
